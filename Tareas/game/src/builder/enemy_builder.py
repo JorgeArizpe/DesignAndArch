@@ -23,3 +23,6 @@ class EnemyBuilder:
         enemy = self.enemy
         self.reset()
         return enemy
+    
+    def set_points(self, points):
+        self.enemy.points = points

@@ -6,8 +6,6 @@ class Config:
             cls._instance.settings = {
                 'WIDTH': 800,
                 'HEIGHT': 600,
-                'PLAYER_SPEED': 5,
-                'BULLET_SPEED': 7
             }
         return cls._instance
     
