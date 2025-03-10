@@ -4,6 +4,8 @@ from core.config import Config
 from entities.player import Player
 from builder.enemy_builder import EnemyBuilder
 from builder.director import EnemyDirector
+from builder.director import PlayerDirector
+from builder.player_builder import PlayerBuilder
 from utils.check_collision import check_collision
 
 pygame.init()
@@ -18,9 +20,9 @@ pygame.display.set_caption('Space Invaders')
 def show_ship_selection_menu():
     font = pygame.font.Font(None, 36)
     options = [
-        {"name": "Nave Rápida", "PLAYER_SPEED": 9, "BULLET_SPEED": 12, "SCORE_MULT": 1.0},
-        {"name": "Nave Equilibrada", "PLAYER_SPEED": 7, "BULLET_SPEED": 10, "SCORE_MULT": 1.2},
-        {"name": "Nave Poderosa", "PLAYER_SPEED": 5, "BULLET_SPEED": 7, "SCORE_MULT": 1.5},
+        {"name": "Nave Rápida", "tipo": 1},
+        {"name": "Nave Equilibrada", "tipo": 2},
+        {"name": "Nave Lenta", "tipo": 3}
     ]
     selected_option = 0
 
@@ -76,19 +78,21 @@ def show_game_over_screen(score):
 
 # Mostrar el menú de selección de naves y obtener la configuración seleccionada
 selected_ship = show_ship_selection_menu()
-PLAYER_SPEED, BULLET_SPEED, SCORE_MULT = selected_ship["PLAYER_SPEED"], selected_ship["BULLET_SPEED"], selected_ship["SCORE_MULT"]
+
+player_director = PlayerDirector()
+player_builder = PlayerBuilder()
 
 # Jugador
-player = Player(WIDTH // 2, HEIGHT - 80, '../assets/images/player.png', BULLET_SPEED, PLAYER_SPEED, SCORE_MULT)
+player = player_director.construct_player(PlayerBuilder(), selected_ship["tipo"], WIDTH // 2, HEIGHT - 80)
 
 # Enemies
-director = EnemyDirector()
-builder = EnemyBuilder()
+enemy_director = EnemyDirector()
+enemy_builder = EnemyBuilder()
 
 enemies = [
-    director.construct_enemy(builder, 'normal'),
-    director.construct_enemy(builder, 'fast'),
-    director.construct_enemy(builder, 'strong')
+    enemy_director.construct_enemy(enemy_builder, 'normal'),
+    enemy_director.construct_enemy(enemy_builder, 'fast'),
+    enemy_director.construct_enemy(enemy_builder, 'strong')
 ]
 
 bullets = []
@@ -134,11 +138,11 @@ while running:
                 running = False
             else:
                 # Reiniciar el juego
-                player = Player(WIDTH // 2, HEIGHT - 80, '../assets/images/player.png', BULLET_SPEED, PLAYER_SPEED, SCORE_MULT)
+                player = player_director.construct_player(PlayerBuilder(), selected_ship["tipo"], WIDTH // 2, HEIGHT - 80)
                 enemies = [
-                    director.construct_enemy(builder, 'normal'),
-                    director.construct_enemy(builder, 'fast'),
-                    director.construct_enemy(builder, 'strong')
+                    enemy_director.construct_enemy(enemy_builder, 'normal'),
+                    enemy_director.construct_enemy(enemy_builder, 'fast'),
+                    enemy_director.construct_enemy(enemy_builder, 'strong')
                 ]
                 bullets = []
                 score = 0
@@ -156,10 +160,10 @@ while running:
     enemy_spawn_timer += 1
     enemy_types = ['normal', 'fast', 'strong']
     
-    if enemy_spawn_timer >= 50:
+    if enemy_spawn_timer >= 30:
         random_enemy_type = random.choice(enemy_types)
         
-        enemies.append(director.construct_enemy(builder, random_enemy_type))
+        enemies.append(enemy_director.construct_enemy(enemy_builder, random_enemy_type))
         enemy_spawn_timer = 0
     
     player.draw(screen)

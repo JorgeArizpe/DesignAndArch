@@ -3,7 +3,7 @@ import pygame
 from entities.enemy import Enemy
 
 class EnemyBuilder:
-    def __init__(self,):
+    def __init__(self):
         self.reset()
     
     def reset(self):
