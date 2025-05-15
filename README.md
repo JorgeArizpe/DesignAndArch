@@ -1,2 +1,2 @@
 # DesignAndArch
-Actividades del modulo  M5 Design & Architecture 
+Actividades del modulo Design & Architecture 
