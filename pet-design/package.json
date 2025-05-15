@@ -25,7 +25,7 @@
       "properties": {
         "pet-design.geminiApiKey": {
           "type": "string",
-          "default": "AIzaSyDGPIZleqhVJuH9UTjor7TK2IYP8C4nlGg",
+          "default": "HERE GOES THE KEY",
           "description": "Your Gemini API key for code analysis"
         }
       }
